@@ -10,6 +10,10 @@ let tasks = [
   { id: 3, title: "Push to GitHub", done: false },
 ];
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 app.get("/", (req, res) => {
   res.status(200).json({
     name: "Task API",
@@ -35,8 +39,24 @@ app.get('/tasks/:id', (req, res) => {
   res.status(200).json(task);
 });
 
-app.get("/health", (req, res) => {
-  res.status(200).json({ status: "ok" });
+// POST /tasks - Create task
+app.post('/tasks', (req, res) => {
+  const { title } = req.body;
+
+  // Validation: ensure title exists and is not an empty/whitespace string
+  if (!title || typeof title !== 'string' || title.trim() === '') {
+    return res.status(400).json({ error: "Field 'title' is required and cannot be empty" });
+  }
+
+  const nextId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+  const newTask = {
+    id: nextId,
+    title: title.trim(),
+    done: false
+  };
+
+  tasks.push(newTask);
+  res.status(201).json(newTask);
 });
 
 app.listen(PORT, () => {
