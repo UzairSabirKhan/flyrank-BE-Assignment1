@@ -4,9 +4,16 @@ const PORT = 3000;
 
 app.use(express.json());
 
-// Stage 0: Root greeting
 app.get("/", (req, res) => {
-  res.status(200).send("Hello, server!");
+  res.status(200).json({
+    name: "Task API",
+    version: "1.0",
+    endpoints: ["/tasks"],
+  });
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
 });
 
 app.listen(PORT, () => {
