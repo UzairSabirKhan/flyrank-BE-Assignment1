@@ -4,6 +4,11 @@ const PORT = 3000;
 
 app.use(express.json());
 
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./openapi.json");
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 let tasks = [
   { id: 1, title: "Review FlyRank lecture", done: true },
   { id: 2, title: "Build Project", done: false },
